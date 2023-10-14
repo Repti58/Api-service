@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PostsService } from './posts.service';
+import { PostsService } from '../../src/posts/posts.service';
 import { HttpService } from '@nestjs/axios';
 import { of, throwError } from 'rxjs';
 
