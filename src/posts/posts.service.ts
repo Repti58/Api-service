@@ -1,4 +1,4 @@
-import { Logger, HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { Observable, catchError, firstValueFrom } from 'rxjs';
 import { AxiosError } from 'axios';
@@ -6,7 +6,6 @@ import { AxiosError } from 'axios';
 @Injectable()
 export class PostsService {
     constructor(private httpService: HttpService) {}
-    logger = new Logger();
     isPostValid(post: { id: number; title: string; body: string }) {
         function isIdValid(id: number) {
             return !!id && Number.isInteger(id);
@@ -35,7 +34,6 @@ export class PostsService {
         error: AxiosError,
         errorMessage: string,
     ): Observable<never> {
-        this.logger.error(error.response?.data || 'An error occurred.');
         throw new HttpException(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
