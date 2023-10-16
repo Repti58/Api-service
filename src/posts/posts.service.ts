@@ -6,16 +6,16 @@ import { AxiosError } from 'axios';
 @Injectable()
 export class PostsService {
     constructor(private httpService: HttpService) {}
-    isPostValid(post: { id: number; title: string; body: string }) {
+    isPostValid(post: { id: number; title: string; body: string }): boolean {
         function isIdValid(id: number) {
             return !!id && Number.isInteger(id);
         }
 
-        function isTitleValid(title: string) {
+        function isTitleValid(title: string): boolean {
             return !!title && typeof title === 'string' && title.length <= 100;
         }
 
-        function isBodyValid(body: string) {
+        function isBodyValid(body: string): boolean {
             return !!body && typeof body === 'string' && body.length <= 200;
         }
         return (
@@ -25,7 +25,11 @@ export class PostsService {
         );
     }
 
-    filterPosts(posts: { id: number; title: string; body: string }[]) {
+    filterPosts(posts: { id: number; title: string; body: string }[]): {
+        id: number;
+        title: string;
+        body: string;
+    }[] {
         const result = posts.filter((post) => this.isPostValid(post));
         return result;
     }
@@ -37,7 +41,7 @@ export class PostsService {
         throw new HttpException(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    async getPosts() {
+    async getPosts(): Promise<{ id: number; title: string; body: string }[]> {
         const response = this.httpService
             .get('https://jsonplaceholder.typicode.com/posts')
             .pipe(
@@ -46,10 +50,14 @@ export class PostsService {
                 ),
             );
         const posts = await firstValueFrom(response);
+        console.log('posts', posts);
+
         return this.filterPosts(posts.data);
     }
 
-    async getPostDetails(id: number) {
+    async getPostDetails(
+        id: number,
+    ): Promise<{ id: number; title: string; body: string }> {
         const response = this.httpService
             .get(`https://jsonplaceholder.typicode.com/posts/${id}`)
             .pipe(
