@@ -50,8 +50,6 @@ export class PostsService {
                 ),
             );
         const posts = await firstValueFrom(response);
-        console.log('posts', posts);
-
         return this.filterPosts(posts.data);
     }
 
